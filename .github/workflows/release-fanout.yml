@@ -1,0 +1,122 @@
+name: Release fanout
+
+# Notifies downstream OESIS repos whenever canonical contract content changes
+# on main (or a release tag is pushed). Each downstream repo listens for the
+# repository_dispatch event and opens a sync PR against its own main branch.
+#
+# Requires org secret: CONTRACTS_SYNC_PAT — fine-grained PAT with
+#   Contents: Read & Write
+#   Pull requests: Read & Write
+# on oesis-runtime, oesis-public-site, oesis-hardware, oesis-program-specs.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'v*/**'
+      - 'schemas/**'
+      - 'examples/**'
+      - 'bundles/**'
+  workflow_dispatch:
+    inputs:
+      lanes_changed:
+        description: 'Comma-separated lanes to flag as changed (e.g. "v0.1,v1.0"). Leave empty to compute from diff.'
+        required: false
+        default: ''
+
+permissions:
+  contents: read
+
+jobs:
+  fanout:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Compute changed lanes
+        id: lanes
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ -n "${{ inputs.lanes_changed }}" ]; then
+            echo "lanes=${{ inputs.lanes_changed }}" >> "$GITHUB_OUTPUT"
+          else
+            base="${{ github.event.before }}"
+            if [ -z "$base" ] || [ "$base" = "0000000000000000000000000000000000000000" ]; then
+              # First push or force-push where before is unknown. Consider all lanes touched.
+              lanes="v0.1,v1.0,v1.5"
+            else
+              changed=$(git diff --name-only "$base" "${{ github.sha }}" 2>/dev/null \
+                | awk -F/ '/^v[0-9]+\.[0-9]+\//{print $1}' \
+                | sort -u | paste -sd, -)
+              lanes="${changed:-}"
+            fi
+            echo "lanes=$lanes" >> "$GITHUB_OUTPUT"
+          fi
+          echo "Computed lanes: $(cat "$GITHUB_OUTPUT" | grep ^lanes=)"
+
+      - name: Determine release signal
+        id: release
+        shell: bash
+        run: |
+          is_tag="false"
+          if [[ "${{ github.ref }}" == refs/tags/v* ]]; then is_tag="true"; fi
+          echo "is_tag=$is_tag" >> "$GITHUB_OUTPUT"
+
+      - name: Dispatch to oesis-runtime
+        uses: peter-evans/repository-dispatch@v3
+        with:
+          token: ${{ secrets.CONTRACTS_SYNC_PAT }}
+          repository: lumenaut-llc/oesis_runtime
+          event-type: contracts-updated
+          client-payload: |-
+            {
+              "contracts_sha": "${{ github.sha }}",
+              "contracts_ref": "${{ github.ref }}",
+              "lanes_changed": "${{ steps.lanes.outputs.lanes }}",
+              "is_tag_release": ${{ steps.release.outputs.is_tag }}
+            }
+
+      - name: Dispatch to oesis-public-site
+        uses: peter-evans/repository-dispatch@v3
+        with:
+          token: ${{ secrets.CONTRACTS_SYNC_PAT }}
+          repository: lumenaut-llc/oesis_public_site
+          event-type: contracts-updated
+          client-payload: |-
+            {
+              "contracts_sha": "${{ github.sha }}",
+              "contracts_ref": "${{ github.ref }}",
+              "lanes_changed": "${{ steps.lanes.outputs.lanes }}",
+              "is_tag_release": ${{ steps.release.outputs.is_tag }}
+            }
+
+      - name: Dispatch to oesis-hardware
+        uses: peter-evans/repository-dispatch@v3
+        with:
+          token: ${{ secrets.CONTRACTS_SYNC_PAT }}
+          repository: lumenaut-llc/oesis-hardware
+          event-type: contracts-updated
+          client-payload: |-
+            {
+              "contracts_sha": "${{ github.sha }}",
+              "contracts_ref": "${{ github.ref }}",
+              "lanes_changed": "${{ steps.lanes.outputs.lanes }}",
+              "is_tag_release": ${{ steps.release.outputs.is_tag }}
+            }
+
+      - name: Dispatch to oesis-program-specs
+        uses: peter-evans/repository-dispatch@v3
+        with:
+          token: ${{ secrets.CONTRACTS_SYNC_PAT }}
+          repository: lumenaut-llc/oesis-program-specs
+          event-type: contracts-updated
+          client-payload: |-
+            {
+              "contracts_sha": "${{ github.sha }}",
+              "contracts_ref": "${{ github.ref }}",
+              "lanes_changed": "${{ steps.lanes.outputs.lanes }}",
+              "is_tag_release": ${{ steps.release.outputs.is_tag }}
+            }

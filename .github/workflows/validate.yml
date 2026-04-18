@@ -1,0 +1,100 @@
+name: Validate
+
+# Gate merges to main so release-fanout only ever propagates valid contracts.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  json-validate:
+    name: Parse every JSON schema and example
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate JSON parses
+        shell: bash
+        run: |
+          set -euo pipefail
+          fail=0
+          while IFS= read -r f; do
+            if ! python3 -c "import json, sys; json.load(open(sys.argv[1]))" "$f"; then
+              echo "Invalid JSON: $f"
+              fail=1
+            fi
+          done < <(git ls-files '*.json')
+          if [ "$fail" -ne 0 ]; then exit 1; fi
+          echo "All JSON files parse."
+
+  schema-example-coverage:
+    name: Every schema has an example
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Check coverage
+        shell: bash
+        run: |
+          set -euo pipefail
+          missing=0
+          for lane_dir in v0.1 v1.0 v1.5; do
+            if [ ! -d "$lane_dir/schemas" ]; then continue; fi
+            for schema in "$lane_dir"/schemas/*.schema.json; do
+              [ -e "$schema" ] || continue
+              base=$(basename "$schema" .schema.json)
+              if ! ls "$lane_dir"/examples/"$base".example.json >/dev/null 2>&1; then
+                echo "Missing example for $lane_dir/$base"
+                missing=1
+              fi
+            done
+          done
+          if [ "$missing" -ne 0 ]; then exit 1; fi
+          echo "Every schema has a matching example."
+
+  examples-match-schema:
+    name: Examples validate against their schemas
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install jsonschema==4.23.0
+      - name: Validate each example
+        shell: bash
+        run: |
+          set -euo pipefail
+          fail=0
+          for lane_dir in v0.1 v1.0 v1.5; do
+            if [ ! -d "$lane_dir/examples" ]; then continue; fi
+            for example in "$lane_dir"/examples/*.example.json; do
+              [ -e "$example" ] || continue
+              base=$(basename "$example" .example.json)
+              schema="$lane_dir/schemas/$base.schema.json"
+              if [ ! -f "$schema" ]; then continue  # coverage job catches this
+              fi
+              if ! python3 -c "
+          import json, sys
+          from jsonschema import Draft202012Validator
+          schema = json.load(open('$schema'))
+          data = json.load(open('$example'))
+          errors = sorted(Draft202012Validator(schema).iter_errors(data), key=lambda e: e.path)
+          if errors:
+              for e in errors:
+                  print(f'  {list(e.path)}: {e.message}')
+              sys.exit(1)
+          "; then
+                echo "Invalid: $example does not match $schema"
+                fail=1
+              fi
+            done
+          done
+          if [ "$fail" -ne 0 ]; then exit 1; fi
+          echo "All examples validate against their schemas."
