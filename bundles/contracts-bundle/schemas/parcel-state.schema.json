@@ -1,0 +1,333 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://lumenaut-llc.github.io/oesis-program-specs/schemas/parcel-state.schema.json",
+  "title": "OESIS Parcel State",
+  "type": "object",
+  "required": [
+    "parcel_id",
+    "computed_at",
+    "shelter_status",
+    "reentry_status",
+    "egress_status",
+    "asset_risk_status",
+    "confidence",
+    "evidence_mode",
+    "inference_basis",
+    "explanation_payload",
+    "reasons",
+    "hazards",
+    "freshness",
+    "provenance_summary"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "parcel_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "computed_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "shelter_status": {
+      "$ref": "#/$defs/status"
+    },
+    "reentry_status": {
+      "$ref": "#/$defs/status"
+    },
+    "egress_status": {
+      "$ref": "#/$defs/status"
+    },
+    "asset_risk_status": {
+      "$ref": "#/$defs/status"
+    },
+    "confidence": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "evidence_mode": {
+      "type": "string",
+      "enum": [
+        "local_only",
+        "local_plus_public",
+        "public_only",
+        "insufficient"
+      ]
+    },
+    "inference_basis": {
+      "type": "string",
+      "enum": [
+        "local_only",
+        "local_plus_shared",
+        "local_plus_public",
+        "local_plus_shared_plus_public",
+        "public_only",
+        "shared_only",
+        "shared_plus_public",
+        "insufficient"
+      ]
+    },
+    "reasons": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "minItems": 1
+    },
+    "explanation_payload": {
+      "type": "object",
+      "required": [
+        "headline",
+        "basis",
+        "drivers",
+        "limitations",
+        "evidence_contributions",
+        "source_breakdown"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "headline": {
+          "type": "string",
+          "minLength": 1
+        },
+        "basis": {
+          "type": "object",
+          "required": [
+            "evidence_mode",
+            "inference_basis",
+            "confidence_band"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "evidence_mode": {
+              "type": "string"
+            },
+            "inference_basis": {
+              "type": "string"
+            },
+            "confidence_band": {
+              "type": "string",
+              "enum": [
+                "low",
+                "medium",
+                "high"
+              ]
+            }
+          }
+        },
+        "drivers": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "limitations": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "evidence_contributions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "contribution_id",
+              "source_class",
+              "source_name",
+              "role",
+              "summary",
+              "hazards",
+              "weight",
+              "visibility"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "contribution_id": {
+                "type": "string",
+                "minLength": 1
+              },
+              "source_class": {
+                "type": "string",
+                "enum": [
+                  "local",
+                  "shared",
+                  "public",
+                  "parcel_context",
+                  "system"
+                ]
+              },
+              "source_name": {
+                "type": "string",
+                "minLength": 1
+              },
+              "role": {
+                "type": "string",
+                "enum": [
+                  "driver",
+                  "limitation"
+                ]
+              },
+              "summary": {
+                "type": "string",
+                "minLength": 1
+              },
+              "hazards": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "enum": [
+                    "smoke",
+                    "flood",
+                    "heat"
+                  ]
+                },
+                "minItems": 1
+              },
+              "weight": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1
+              },
+              "visibility": {
+                "type": "string",
+                "enum": [
+                  "dwelling_safe",
+                  "internal_only"
+                ]
+              },
+              "freshness_band": {
+                "type": "string",
+                "enum": [
+                  "fresh",
+                  "aging",
+                  "stale",
+                  "expired"
+                ]
+              }
+            }
+          }
+        },
+        "source_breakdown": {
+          "type": "object",
+          "required": [
+            "local",
+            "shared",
+            "public",
+            "parcel_context",
+            "system"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "local": {
+              "type": "boolean"
+            },
+            "shared": {
+              "type": "boolean"
+            },
+            "public": {
+              "type": "boolean"
+            },
+            "parcel_context": {
+              "type": "boolean"
+            },
+            "system": {
+              "type": "boolean"
+            }
+          }
+        }
+      }
+    },
+    "hazards": {
+      "type": "object",
+      "required": [
+        "smoke_probability",
+        "flood_probability",
+        "heat_probability"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "smoke_probability": {
+          "$ref": "#/$defs/probability"
+        },
+        "flood_probability": {
+          "$ref": "#/$defs/probability"
+        },
+        "heat_probability": {
+          "$ref": "#/$defs/probability"
+        }
+      }
+    },
+    "freshness": {
+      "type": "object",
+      "required": [
+        "latest_observation_at",
+        "seconds_since_latest",
+        "stale"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "latest_observation_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "seconds_since_latest": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "stale": {
+          "type": "boolean"
+        }
+      }
+    },
+    "provenance_summary": {
+      "type": "object",
+      "required": [
+        "observation_count",
+        "source_modes"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "observation_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "source_modes": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1
+        },
+        "observation_refs": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "status": {
+      "type": "string",
+      "enum": [
+        "safe",
+        "caution",
+        "unsafe",
+        "unknown"
+      ]
+    },
+    "probability": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    }
+  }
+}

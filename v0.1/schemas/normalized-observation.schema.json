@@ -1,0 +1,102 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://lumenaut-llc.github.io/oesis-program-specs/contracts/v0.1/schemas/normalized-observation.schema.json",
+  "title": "OESIS Normalized Observation",
+  "type": "object",
+  "required": [
+    "observation_id",
+    "node_id",
+    "parcel_id",
+    "observed_at",
+    "ingested_at",
+    "observation_type",
+    "values",
+    "health",
+    "provenance"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "observation_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "node_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "parcel_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "observed_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "ingested_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "observation_type": {
+      "type": "string",
+      "minLength": 1
+    },
+    "values": {
+      "type": "object"
+    },
+    "health": {
+      "type": "object",
+      "required": [
+        "uptime_s",
+        "wifi_connected",
+        "read_failures_total"
+      ],
+      "properties": {
+        "uptime_s": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "wifi_connected": {
+          "type": "boolean"
+        },
+        "read_failures_total": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "required": [
+        "source_kind",
+        "schema_version",
+        "firmware_version",
+        "raw_packet_ref"
+      ],
+      "properties": {
+        "source_kind": {
+          "type": "string",
+          "minLength": 1
+        },
+        "schema_version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "firmware_version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "raw_packet_ref": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "raw_packet": {
+      "type": "object"
+    },
+    "versioning": {
+      "type": "object",
+      "description": "Runtime versioning metadata including API version, runtime lane, and supported lanes."
+    }
+  }
+}

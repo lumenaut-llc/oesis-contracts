@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://lumenaut-llc.github.io/oesis-program-specs/contracts/v1.5/schemas/intervention-event.schema.json",
+  "title": "OESIS Intervention Event",
+  "type": "object",
+  "required": [
+    "parcel_id",
+    "event_id",
+    "occurred_at",
+    "action_type",
+    "action_source"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "parcel_id": { "type": "string", "minLength": 1 },
+    "event_id": { "type": "string", "minLength": 1 },
+    "occurred_at": { "type": "string", "format": "date-time" },
+    "action_type": { "type": "string", "minLength": 1 },
+    "action_source": { "type": "string", "enum": ["operator_manual", "system_advisory", "system_bounded_control", "unknown"] },
+    "details": { "type": "object" },
+    "linked_house_state_ref": { "type": "string", "minLength": 1 },
+    "linked_capability_ref": { "type": "string", "minLength": 1 }
+  }
+}

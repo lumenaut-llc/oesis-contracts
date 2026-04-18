@@ -1,0 +1,90 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://lumenaut-llc.github.io/oesis-program-specs/v1.0/schemas/network-assist-signal.schema.json",
+  "title": "OESIS Network-Assist Signal (v1.0)",
+  "type": "object",
+  "required": [
+    "signal_id",
+    "parcel_ref",
+    "generated_at",
+    "batch_id",
+    "consent_verified",
+    "hazard_bands",
+    "evidence_mode",
+    "confidence_band",
+    "node_families"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "signal_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "parcel_ref": {
+      "type": "string",
+      "minLength": 1
+    },
+    "generated_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "batch_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "consent_verified": {
+      "type": "boolean",
+      "const": true
+    },
+    "hazard_bands": {
+      "type": "object",
+      "required": [
+        "smoke_band",
+        "flood_band",
+        "heat_band"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "smoke_band": {
+          "type": "string",
+          "enum": ["low", "medium", "high", "unknown"]
+        },
+        "flood_band": {
+          "type": "string",
+          "enum": ["low", "medium", "high", "unknown"]
+        },
+        "heat_band": {
+          "type": "string",
+          "enum": ["low", "medium", "high", "unknown"]
+        }
+      }
+    },
+    "evidence_mode": {
+      "type": "string",
+      "enum": ["live", "stale", "offline"]
+    },
+    "confidence_band": {
+      "type": "string",
+      "enum": ["low", "medium", "high"]
+    },
+    "node_families": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "installation_context": {
+      "type": "string",
+      "enum": ["indoor_only", "sheltered_outdoor", "mixed"]
+    },
+    "siting_limitations": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    }
+  }
+}

@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://lumenaut-llc.github.io/oesis-program-specs/v1.0/schemas/sharing-settings.schema.json",
+  "title": "OESIS Sharing Settings (v1.0)",
+  "type": "object",
+  "required": [
+    "parcel_id",
+    "updated_at",
+    "private_only",
+    "network_assist",
+    "neighborhood_aggregate",
+    "research_or_pilot",
+    "notice_version",
+    "revocation_pending"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "parcel_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "private_only": {
+      "type": "boolean"
+    },
+    "network_assist": {
+      "type": "boolean"
+    },
+    "neighborhood_aggregate": {
+      "type": "boolean"
+    },
+    "research_or_pilot": {
+      "type": "boolean"
+    },
+    "notice_version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "revocation_pending": {
+      "type": "boolean"
+    }
+  }
+}
+

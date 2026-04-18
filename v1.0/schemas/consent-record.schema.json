@@ -1,0 +1,59 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://lumenaut-llc.github.io/oesis-program-specs/v1.0/schemas/consent-record.schema.json",
+  "title": "OESIS Consent Record (v1.0)",
+  "type": "object",
+  "required": [
+    "consent_record_id",
+    "parcel_id",
+    "account_id",
+    "sharing_mode",
+    "action",
+    "effective_at",
+    "notice_version",
+    "source_surface"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "consent_record_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "parcel_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "account_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "sharing_mode": {
+      "type": "string",
+      "enum": [
+        "network_assist",
+        "neighborhood_aggregate",
+        "research_or_pilot"
+      ]
+    },
+    "action": {
+      "type": "string",
+      "enum": [
+        "enabled",
+        "revoked"
+      ]
+    },
+    "effective_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "notice_version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "source_surface": {
+      "type": "string",
+      "minLength": 1
+    }
+  }
+}
+

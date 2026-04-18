@@ -1,0 +1,234 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://lumenaut-llc.github.io/oesis-program-specs/schemas/parcel-context.schema.json",
+  "title": "OESIS Parcel Context",
+  "type": "object",
+  "required": [
+    "parcel_id",
+    "site_profile",
+    "node_installations",
+    "parcel_priors"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "parcel_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "site_profile": {
+      "type": "object",
+      "required": [
+        "structure_type",
+        "parcel_area_m2",
+        "climate_zone",
+        "notes"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "structure_type": {
+          "type": "string",
+          "enum": [
+            "single_family",
+            "duplex",
+            "multi_unit",
+            "unknown"
+          ]
+        },
+        "parcel_area_m2": {
+          "type": "number",
+          "minimum": 0
+        },
+        "climate_zone": {
+          "type": "string",
+          "minLength": 1
+        },
+        "notes": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "node_installations": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "node_id",
+          "node_type",
+          "location_mode",
+          "install_role",
+          "placement_notes",
+          "height_m",
+          "exposure_bias_flags",
+          "installed_at"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "node_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "node_type": {
+            "type": "string",
+            "minLength": 1
+          },
+          "location_mode": {
+            "type": "string",
+            "enum": [
+              "indoor",
+              "sheltered",
+              "outdoor"
+            ]
+          },
+          "install_role": {
+            "type": "string",
+            "minLength": 1
+          },
+          "placement_notes": {
+            "type": "string",
+            "minLength": 1
+          },
+          "height_m": {
+            "type": "number",
+            "minimum": 0
+          },
+          "exposure_bias_flags": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "installed_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      }
+    },
+    "parcel_priors": {
+      "type": "object",
+      "required": [
+        "heat_retention_class",
+        "runoff_tendency_class",
+        "smoke_exposure_class"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "heat_retention_class": {
+          "$ref": "#/$defs/priorClass"
+        },
+        "runoff_tendency_class": {
+          "$ref": "#/$defs/priorClass"
+        },
+        "smoke_exposure_class": {
+          "$ref": "#/$defs/priorClass"
+        },
+        "fema_zone": {
+          "type": "string",
+          "minLength": 1
+        },
+        "foundation_type": {
+          "type": "string",
+          "minLength": 1
+        },
+        "first_floor_elev_ft": {
+          "type": "number"
+        },
+        "base_flood_elev_ft": {
+          "type": "number"
+        },
+        "year_built": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "dist_to_water_ft": {
+          "type": "number",
+          "minimum": 0
+        },
+        "zone_zero_clearance_class": {
+          "type": "string",
+          "minLength": 1
+        },
+        "defensible_space_class": {
+          "type": "string",
+          "minLength": 1
+        },
+        "roof_class": {
+          "type": "string",
+          "minLength": 1
+        },
+        "exterior_class": {
+          "type": "string",
+          "minLength": 1
+        },
+        "vent_class": {
+          "type": "string",
+          "minLength": 1
+        },
+        "window_class": {
+          "type": "string",
+          "minLength": 1
+        },
+        "dist_to_wildland_ft": {
+          "type": "number",
+          "minimum": 0
+        }
+      }
+    },
+    "structure_response_profile": {
+      "type": "object"
+    },
+    "site_dependency_profile": {
+      "type": "object"
+    },
+    "known_protective_capabilities": {
+      "type": "object"
+    },
+    "known_vulnerable_zones": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "divergence_tracking": {
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "#/$defs/divergenceTrackingEntry"
+      }
+    }
+  },
+  "$defs": {
+    "priorClass": {
+      "type": "string",
+      "enum": [
+        "low",
+        "moderate",
+        "high",
+        "unknown"
+      ]
+    },
+    "divergenceTrackingEntry": {
+      "type": "object",
+      "required": [
+        "persistence_minutes",
+        "num_concordant_sensors"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "persistence_minutes": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "num_concordant_sensors": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    }
+  }
+}

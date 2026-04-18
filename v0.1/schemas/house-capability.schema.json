@@ -1,0 +1,44 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://lumenaut-llc.github.io/oesis-program-specs/schemas/house-capability.schema.json",
+  "title": "OESIS House Capability",
+  "type": "object",
+  "required": [
+    "parcel_id",
+    "effective_at",
+    "capabilities"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "parcel_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "effective_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "capabilities": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "recirculation_available": { "type": "boolean" },
+        "portable_purifier_present": { "type": "boolean" },
+        "backup_power_present": { "type": "boolean" },
+        "motorized_shades_present": { "type": "boolean" },
+        "pump_or_sump_present": { "type": "boolean" },
+        "higher_merv_supported": { "type": "string", "enum": ["yes", "no", "unknown"] }
+      }
+    },
+    "equipment_state": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "hvac_mode": { "type": "string", "minLength": 1 },
+        "fan_state": { "type": "string", "minLength": 1 },
+        "air_source_mode": { "type": "string", "minLength": 1 },
+        "purifier_state": { "type": "string", "minLength": 1 }
+      }
+    }
+  }
+}

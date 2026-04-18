@@ -1,0 +1,69 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://lumenaut-llc.github.io/oesis-program-specs/schemas/rights-request.schema.json",
+  "title": "OESIS Rights Request",
+  "type": "object",
+  "required": [
+    "request_id",
+    "parcel_id",
+    "account_id",
+    "request_type",
+    "status",
+    "created_at",
+    "scope",
+    "requested_from_surface"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "request_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "parcel_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "account_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "request_type": {
+      "type": "string",
+      "enum": [
+        "export",
+        "delete"
+      ]
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "submitted",
+        "in_progress",
+        "completed",
+        "rejected"
+      ]
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "scope": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "private_parcel_data",
+          "shared_data",
+          "public_context",
+          "derived_parcel_state",
+          "administrative_record"
+        ]
+      },
+      "minItems": 1
+    },
+    "requested_from_surface": {
+      "type": "string",
+      "minLength": 1
+    }
+  }
+}

@@ -1,0 +1,163 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://lumenaut-llc.github.io/oesis-program-specs/contracts/v1.0/schemas/deployment-metadata.schema.json",
+  "title": "OESIS Deployment Metadata v1.0",
+  "type": "object",
+  "required": [
+    "parcel_id",
+    "node_id",
+    "install_record_id",
+    "installed_at",
+    "installed_by",
+    "install_status"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "parcel_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "node_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "install_record_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "installed_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "installed_by": {
+      "type": "string",
+      "minLength": 1
+    },
+    "install_status": {
+      "type": "string",
+      "enum": ["provisional", "field_validated", "needs_review"]
+    },
+    "mount": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "mount_type": {
+          "type": "string",
+          "enum": [
+            "fixed_bracket",
+            "adhesive",
+            "shelf_placed",
+            "clamp",
+            "magnetic",
+            "other"
+          ]
+        },
+        "mount_height_m": {
+          "type": "number",
+          "minimum": 0.0
+        },
+        "orientation_class": {
+          "type": "string",
+          "minLength": 1
+        },
+        "field_marker_present": {
+          "type": "boolean"
+        }
+      }
+    },
+    "exposure": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "sun_exposure_class": {
+          "type": "string",
+          "enum": ["none", "partial", "full"]
+        },
+        "airflow_exposure_class": {
+          "type": "string",
+          "enum": ["low", "moderate", "high"]
+        },
+        "splash_exposure_class": {
+          "type": "string",
+          "enum": ["none", "low", "high"]
+        },
+        "proximity_to_sources": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "enclosure": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "enclosure_revision": {
+          "type": "string",
+          "minLength": 1
+        },
+        "enclosure_sealed": {
+          "type": "boolean"
+        }
+      }
+    },
+    "power": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "power_source_type": {
+          "type": "string",
+          "enum": [
+            "usb_c_mains",
+            "ac_adapter",
+            "poe",
+            "battery",
+            "solar_assist",
+            "external_dc_protected"
+          ]
+        },
+        "power_reliability_class": {
+          "type": "string",
+          "enum": ["continuous", "intermittent", "battery_limited"]
+        }
+      }
+    },
+    "storage": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "storage_type": {
+          "type": "string",
+          "enum": ["none", "micro_sd", "flash_internal"]
+        },
+        "storage_capacity_gb": {
+          "type": ["number", "null"],
+          "minimum": 0
+        }
+      }
+    },
+    "maintenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "maintenance_status": {
+          "type": "string",
+          "enum": ["provisional", "current", "overdue", "needs_service"]
+        },
+        "last_maintenance_at": {
+          "type": ["string", "null"],
+          "format": "date-time"
+        },
+        "maintenance_interval_days": {
+          "type": ["integer", "null"],
+          "minimum": 1
+        },
+        "maintenance_notes": {
+          "type": ["string", "null"]
+        }
+      }
+    }
+  }
+}

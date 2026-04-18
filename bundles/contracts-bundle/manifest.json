@@ -1,0 +1,56 @@
+{
+  "bundle_version": "v1.0",
+  "compatibility": {
+    "runtime_max_version": null,
+    "runtime_min_version": "0.1.0"
+  },
+  "examples": {
+    "consent-record": "examples/consent-record.example.json",
+    "evidence-summary": "examples/evidence-summary.example.json",
+    "export-bundle": "examples/export-bundle.example.json",
+    "node-observation": "examples/node-observation.example.json",
+    "node-registry": "examples/node-registry.example.json",
+    "normalized-observation": "examples/normalized-observation.example.json",
+    "operator-access-event": "examples/operator-access-event.example.json",
+    "parcel-context": "examples/parcel-context.example.json",
+    "parcel-state": "examples/parcel-state.example.json",
+    "public-context": "examples/public-context.example.json",
+    "raw-public-smoke": "examples/raw-public-smoke.example.json",
+    "raw-public-weather": "examples/raw-public-weather.example.json",
+    "retention-cleanup-report": "examples/retention-cleanup-report.example.json",
+    "rights-request": "examples/rights-request.example.json",
+    "rights-request-store": "examples/rights-request-store.example.json",
+    "shared-neighborhood-signal": "examples/shared-neighborhood-signal.example.json",
+    "sharing-settings": "examples/sharing-settings.example.json",
+    "sharing-store": "examples/sharing-store.example.json"
+  },
+  "generated_at": "2026-04-15T00:00:00Z",
+  "lane": "v0.1",
+  "schema_version_set": [
+    "oesis.bench-air.v1"
+  ],
+  "schemas": {
+    "consent-record": "schemas/consent-record.schema.json",
+    "export-bundle": "schemas/export-bundle.schema.json",
+    "node-observation": "schemas/node-observation.schema.json",
+    "node-registry": "schemas/node-registry.schema.json",
+    "operator-access-event": "schemas/operator-access-event.schema.json",
+    "parcel-state": "schemas/parcel-state.schema.json",
+    "retention-cleanup-report": "schemas/retention-cleanup-report.schema.json",
+    "rights-request": "schemas/rights-request.schema.json",
+    "rights-request-store": "schemas/rights-request-store.schema.json",
+    "shared-neighborhood-signal": "schemas/shared-neighborhood-signal.schema.json",
+    "sharing-settings": "schemas/sharing-settings.schema.json",
+    "sharing-store": "schemas/sharing-store.schema.json"
+  },
+  "source_commit": "81791c9af8876324c3098cd0e37edff1f62fb577",
+  "source_repo": "oesis-program-specs",
+  "source_roots": {
+    "examples": [
+      "contracts/examples"
+    ],
+    "schemas": [
+      "contracts/schemas"
+    ]
+  }
+}

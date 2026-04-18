@@ -1,0 +1,34 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://lumenaut-llc.github.io/oesis-program-specs/schemas/retention-cleanup-report.schema.json",
+  "title": "OESIS Retention Cleanup Report",
+  "type": "object",
+  "required": [
+    "ran_at",
+    "access_events_removed",
+    "rights_requests_removed",
+    "notes"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "ran_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "access_events_removed": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "rights_requests_removed": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "notes": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    }
+  }
+}

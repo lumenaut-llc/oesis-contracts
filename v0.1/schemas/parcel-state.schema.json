@@ -1,0 +1,847 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://lumenaut-llc.github.io/oesis-program-specs/schemas/parcel-state.schema.json",
+  "title": "OESIS Parcel State",
+  "type": "object",
+  "required": [
+    "parcel_id",
+    "computed_at",
+    "shelter_status",
+    "reentry_status",
+    "egress_status",
+    "asset_risk_status",
+    "confidence",
+    "evidence_mode",
+    "inference_basis",
+    "explanation_payload",
+    "reasons",
+    "hazards",
+    "hazard_statuses",
+    "parcel_priors_applied",
+    "divergence_records",
+    "public_only_counterfactual",
+    "contrastive_explanations",
+    "freshness",
+    "provenance_summary"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "parcel_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "computed_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "shelter_status": {
+      "$ref": "#/$defs/status"
+    },
+    "reentry_status": {
+      "$ref": "#/$defs/status"
+    },
+    "egress_status": {
+      "$ref": "#/$defs/status"
+    },
+    "asset_risk_status": {
+      "$ref": "#/$defs/status"
+    },
+    "confidence": {
+      "$ref": "#/$defs/probability"
+    },
+    "evidence_mode": {
+      "type": "string",
+      "enum": [
+        "local_only",
+        "local_plus_public",
+        "public_only",
+        "insufficient"
+      ]
+    },
+    "inference_basis": {
+      "type": "string",
+      "enum": [
+        "local_only",
+        "local_plus_shared",
+        "local_plus_public",
+        "local_plus_shared_plus_public",
+        "public_only",
+        "shared_only",
+        "shared_plus_public",
+        "insufficient"
+      ]
+    },
+    "reasons": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "minItems": 1
+    },
+    "explanation_payload": {
+      "type": "object",
+      "required": [
+        "headline",
+        "basis",
+        "drivers",
+        "limitations",
+        "evidence_contributions",
+        "source_breakdown"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "headline": {
+          "type": "string",
+          "minLength": 1
+        },
+        "basis": {
+          "type": "object",
+          "required": [
+            "evidence_mode",
+            "inference_basis",
+            "confidence_band"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "evidence_mode": {
+              "type": "string"
+            },
+            "inference_basis": {
+              "type": "string"
+            },
+            "confidence_band": {
+              "type": "string",
+              "enum": [
+                "low",
+                "medium",
+                "high"
+              ]
+            }
+          }
+        },
+        "drivers": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "limitations": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "evidence_contributions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/evidenceContribution"
+          }
+        },
+        "source_breakdown": {
+          "type": "object",
+          "required": [
+            "local",
+            "shared",
+            "public",
+            "parcel_context",
+            "system"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "local": {
+              "type": "boolean"
+            },
+            "shared": {
+              "type": "boolean"
+            },
+            "public": {
+              "type": "boolean"
+            },
+            "parcel_context": {
+              "type": "boolean"
+            },
+            "system": {
+              "type": "boolean"
+            }
+          }
+        },
+        "support_objects_present": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "divergence_summary": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "top_divergence_records": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/divergenceRecord"
+          }
+        }
+      }
+    },
+    "hazards": {
+      "$ref": "#/$defs/hazardProbabilities"
+    },
+    "hazard_statuses": {
+      "$ref": "#/$defs/hazardStatuses"
+    },
+    "parcel_priors_applied": {
+      "type": "object",
+      "required": [
+        "smoke",
+        "flood",
+        "heat"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "smoke": {
+          "$ref": "#/$defs/priorDetail"
+        },
+        "flood": {
+          "$ref": "#/$defs/priorDetail"
+        },
+        "heat": {
+          "$ref": "#/$defs/priorDetail"
+        }
+      }
+    },
+    "divergence_records": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/divergenceRecord"
+      }
+    },
+    "public_only_counterfactual": {
+      "$ref": "#/$defs/counterfactual"
+    },
+    "contrastive_explanations": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/contrastiveExplanation"
+      }
+    },
+    "local_value_summary": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Concise statement of what local node evidence contributed that public context alone could not provide. Null when no local evidence exists or local evidence agrees with public context."
+    },
+    "closed_loop_summary": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "versioning": {
+      "type": "object",
+      "description": "Runtime versioning metadata including API version, runtime lane, and supported lanes."
+    },
+    "action_logs": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      },
+      "description": "Structured action log entries derived from intervention-event inputs. Present when v1.5 bridge objects are supplied."
+    },
+    "outcome_records": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      },
+      "description": "Structured outcome records derived from verification-outcome inputs. Present when v1.5 bridge objects are supplied."
+    },
+    "freshness": {
+      "type": "object",
+      "required": [
+        "latest_observation_at",
+        "seconds_since_latest",
+        "stale"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "latest_observation_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "seconds_since_latest": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "stale": {
+          "type": "boolean"
+        }
+      }
+    },
+    "provenance_summary": {
+      "type": "object",
+      "required": [
+        "observation_count",
+        "source_modes"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "observation_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "source_modes": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1
+        },
+        "observation_refs": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "support_object_refs": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "runtime_lane": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Runtime lane that produced this parcel-state (e.g., v0.1, v0.2)."
+        }
+      }
+    }
+  },
+  "$defs": {
+    "status": {
+      "type": "string",
+      "enum": [
+        "safe",
+        "caution",
+        "unsafe",
+        "unknown"
+      ]
+    },
+    "probability": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "hazardProbabilities": {
+      "type": "object",
+      "required": [
+        "smoke_probability",
+        "flood_probability",
+        "heat_probability"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "smoke_probability": {
+          "$ref": "#/$defs/probability"
+        },
+        "flood_probability": {
+          "$ref": "#/$defs/probability"
+        },
+        "heat_probability": {
+          "$ref": "#/$defs/probability"
+        }
+      }
+    },
+    "hazardStatuses": {
+      "type": "object",
+      "required": [
+        "smoke",
+        "flood",
+        "heat"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "smoke": {
+          "$ref": "#/$defs/status"
+        },
+        "flood": {
+          "$ref": "#/$defs/status"
+        },
+        "heat": {
+          "$ref": "#/$defs/status"
+        }
+      }
+    },
+    "evidenceContribution": {
+      "type": "object",
+      "required": [
+        "contribution_id",
+        "source_class",
+        "source_name",
+        "role",
+        "summary",
+        "hazards",
+        "weight",
+        "visibility"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "contribution_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "source_class": {
+          "type": "string",
+          "enum": [
+            "local",
+            "shared",
+            "public",
+            "parcel_context",
+            "system"
+          ]
+        },
+        "source_name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "role": {
+          "type": "string",
+          "enum": [
+            "driver",
+            "limitation"
+          ]
+        },
+        "summary": {
+          "type": "string",
+          "minLength": 1
+        },
+        "hazards": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "smoke",
+              "flood",
+              "heat"
+            ]
+          },
+          "minItems": 1
+        },
+        "weight": {
+          "$ref": "#/$defs/probability"
+        },
+        "visibility": {
+          "type": "string",
+          "enum": [
+            "dwelling_safe",
+            "internal_only"
+          ]
+        },
+        "freshness_band": {
+          "type": "string",
+          "enum": [
+            "fresh",
+            "aging",
+            "stale",
+            "expired"
+          ]
+        }
+      }
+    },
+    "priorFactor": {
+      "type": "object",
+      "required": [
+        "factor",
+        "value",
+        "effect",
+        "applied_value"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "factor": {
+          "type": "string",
+          "minLength": 1
+        },
+        "value": {},
+        "effect": {
+          "type": "string",
+          "minLength": 1
+        },
+        "applied_value": {
+          "type": "number"
+        }
+      }
+    },
+    "priorDetail": {
+      "type": "object",
+      "required": [
+        "probability",
+        "adjustment",
+        "summary",
+        "factors"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "probability": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "adjustment": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "summary": {
+          "type": "string",
+          "minLength": 1
+        },
+        "factors": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/priorFactor"
+          }
+        }
+      }
+    },
+    "divergenceRecord": {
+      "type": "object",
+      "required": [
+        "timestamp",
+        "sensor_id",
+        "parameter",
+        "local_value",
+        "regional_value",
+        "regional_source",
+        "correction_applied",
+        "abs_diff",
+        "direction",
+        "magnitude",
+        "persistence_minutes",
+        "persistence_class",
+        "num_concordant_sensors",
+        "confidence"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "timestamp": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "sensor_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "parameter": {
+          "type": "string",
+          "minLength": 1
+        },
+        "local_value": {
+          "type": "number"
+        },
+        "regional_value": {
+          "type": "number"
+        },
+        "regional_source": {
+          "type": "string",
+          "minLength": 1
+        },
+        "correction_applied": {
+          "type": "string",
+          "minLength": 1
+        },
+        "abs_diff": {
+          "type": "number",
+          "minimum": 0
+        },
+        "ratio": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "z_score": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "direction": {
+          "type": "string",
+          "enum": [
+            "local_elevated",
+            "local_depressed",
+            "concordant"
+          ]
+        },
+        "magnitude": {
+          "type": "string",
+          "enum": [
+            "noise",
+            "low",
+            "moderate",
+            "high",
+            "extreme"
+          ]
+        },
+        "persistence_minutes": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "persistence_class": {
+          "type": "string",
+          "enum": [
+            "transient",
+            "short_term",
+            "sustained",
+            "persistent",
+            "chronic"
+          ]
+        },
+        "aqi_category_local": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "aqi_category_regional": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "aqi_category_diff": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "num_concordant_sensors": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "confidence": {
+          "type": "string",
+          "enum": [
+            "low",
+            "medium",
+            "high"
+          ]
+        }
+      }
+    },
+    "counterfactual": {
+      "type": "object",
+      "required": [
+        "hazards",
+        "hazard_statuses",
+        "confidence"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "hazards": {
+          "$ref": "#/$defs/hazardProbabilities"
+        },
+        "hazard_statuses": {
+          "$ref": "#/$defs/hazardStatuses"
+        },
+        "confidence": {
+          "$ref": "#/$defs/probability"
+        }
+      }
+    },
+    "contrastivePath": {
+      "type": "object",
+      "required": [
+        "conclusion",
+        "hazard_level",
+        "probability",
+        "confidence",
+        "data_sources"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "conclusion": {
+          "$ref": "#/$defs/status"
+        },
+        "hazard_level": {
+          "$ref": "#/$defs/status"
+        },
+        "probability": {
+          "$ref": "#/$defs/probability"
+        },
+        "confidence": {
+          "$ref": "#/$defs/probability"
+        },
+        "data_sources": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "divergenceFactor": {
+      "type": "object",
+      "required": [
+        "factor",
+        "local_value",
+        "public_value",
+        "contribution_delta",
+        "is_novel_signal"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "factor": {
+          "type": "string",
+          "minLength": 1
+        },
+        "local_value": {
+          "type": "number"
+        },
+        "public_value": {
+          "type": "number"
+        },
+        "contribution_delta": {
+          "type": "number"
+        },
+        "is_novel_signal": {
+          "type": "boolean"
+        }
+      }
+    },
+    "contrastBlock": {
+      "type": "object",
+      "required": [
+        "summary",
+        "delta_hazard_level",
+        "delta_probability",
+        "divergence_factors"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "summary": {
+          "type": "string",
+          "minLength": 1
+        },
+        "delta_hazard_level": {
+          "type": "integer"
+        },
+        "delta_probability": {
+          "type": "number"
+        },
+        "divergence_factors": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/divergenceFactor"
+          }
+        }
+      }
+    },
+    "verificationScores": {
+      "type": "object",
+      "required": [
+        "brier_score_fact",
+        "brier_score_foil",
+        "local_data_added_value"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "brier_score_fact": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "brier_score_foil": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "local_data_added_value": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        }
+      }
+    },
+    "verificationBlock": {
+      "type": "object",
+      "required": [
+        "prediction_window_end",
+        "ground_truth_available",
+        "scores"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "prediction_window_end": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "ground_truth_available": {
+          "type": "boolean"
+        },
+        "scores": {
+          "$ref": "#/$defs/verificationScores"
+        }
+      }
+    },
+    "contrastiveExplanation": {
+      "type": "object",
+      "required": [
+        "explanation_id",
+        "timestamp",
+        "hazard_type",
+        "fact",
+        "foil",
+        "contrast",
+        "verification"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "explanation_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "timestamp": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "hazard_type": {
+          "type": "string",
+          "enum": [
+            "smoke",
+            "flood",
+            "heat"
+          ]
+        },
+        "fact": {
+          "$ref": "#/$defs/contrastivePath"
+        },
+        "foil": {
+          "$ref": "#/$defs/contrastivePath"
+        },
+        "contrast": {
+          "$ref": "#/$defs/contrastBlock"
+        },
+        "verification": {
+          "$ref": "#/$defs/verificationBlock"
+        }
+      }
+    }
+  }
+}

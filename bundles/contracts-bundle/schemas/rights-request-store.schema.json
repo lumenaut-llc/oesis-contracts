@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://lumenaut-llc.github.io/oesis-program-specs/schemas/rights-request-store.schema.json",
+  "title": "OESIS Rights Request Store",
+  "type": "object",
+  "required": [
+    "updated_at",
+    "requests"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "updated_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "requests": {
+      "type": "array",
+      "items": {
+        "$ref": "rights-request.schema.json"
+      }
+    }
+  }
+}

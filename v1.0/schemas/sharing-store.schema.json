@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://lumenaut-llc.github.io/oesis-program-specs/v1.0/schemas/sharing-store.schema.json",
+  "title": "OESIS Sharing Store (v1.0)",
+  "type": "object",
+  "required": [
+    "updated_at",
+    "parcels"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "updated_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "parcels": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "parcel_id",
+          "parcel_ref",
+          "sharing"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "parcel_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "parcel_ref": {
+            "type": "string",
+            "minLength": 1
+          },
+          "sharing": {
+            "$ref": "sharing-settings.schema.json"
+          }
+        }
+      }
+    }
+  }
+}
+

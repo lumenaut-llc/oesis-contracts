@@ -1,0 +1,107 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://lumenaut-llc.github.io/oesis-program-specs/schemas/shared-neighborhood-signal.schema.json",
+  "title": "OESIS Shared Neighborhood Signal",
+  "type": "object",
+  "required": [
+    "generated_at",
+    "min_participants",
+    "sharing_settings",
+    "contributions"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "generated_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "min_participants": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "sharing_settings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "parcel_ref",
+          "neighborhood_aggregate",
+          "revocation_pending"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "parcel_ref": {
+            "type": "string",
+            "minLength": 1
+          },
+          "neighborhood_aggregate": {
+            "type": "boolean"
+          },
+          "revocation_pending": {
+            "type": "boolean"
+          }
+        }
+      }
+    },
+    "contributions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "cell_id",
+          "source_class",
+          "delayed_minutes",
+          "hazards"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "cell_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "source_class": {
+            "type": "string",
+            "enum": [
+              "shared_data",
+              "public_context"
+            ]
+          },
+          "parcel_ref": {
+            "type": "string",
+            "minLength": 1
+          },
+          "delayed_minutes": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "hazards": {
+            "type": "object",
+            "required": [
+              "smoke_probability",
+              "flood_probability",
+              "heat_probability"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "smoke_probability": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1
+              },
+              "flood_probability": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1
+              },
+              "heat_probability": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

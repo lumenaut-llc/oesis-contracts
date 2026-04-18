@@ -1,0 +1,141 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://lumenaut-llc.github.io/oesis-program-specs/contracts/v1.0/schemas/trust-score.schema.json",
+  "title": "OESIS Trust Score v1.0",
+  "type": "object",
+  "required": [
+    "parcel_id",
+    "scored_at",
+    "overall_band",
+    "overall_score",
+    "factors"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "parcel_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "scored_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "overall_band": {
+      "type": "string",
+      "enum": ["high", "medium", "low", "degraded"]
+    },
+    "overall_score": {
+      "type": "number",
+      "minimum": 0.0,
+      "maximum": 1.0
+    },
+    "factors": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "factor_key",
+          "weight",
+          "score",
+          "band",
+          "reason"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "factor_key": {
+            "type": "string",
+            "enum": [
+              "freshness",
+              "node_health",
+              "calibration_state",
+              "install_quality",
+              "source_diversity"
+            ]
+          },
+          "weight": {
+            "type": "number",
+            "minimum": 0.0,
+            "maximum": 1.0
+          },
+          "score": {
+            "type": "number",
+            "minimum": 0.0,
+            "maximum": 1.0
+          },
+          "band": {
+            "type": "string",
+            "enum": ["high", "medium", "low", "degraded"]
+          },
+          "reason": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "node_scores": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["node_id", "score", "band"],
+        "additionalProperties": false,
+        "properties": {
+          "node_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "score": {
+            "type": "number",
+            "minimum": 0.0,
+            "maximum": 1.0
+          },
+          "band": {
+            "type": "string",
+            "enum": ["high", "medium", "low", "degraded"]
+          },
+          "factors": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["factor_key", "score", "band"],
+              "additionalProperties": false,
+              "properties": {
+                "factor_key": { "type": "string", "minLength": 1 },
+                "score": { "type": "number", "minimum": 0.0, "maximum": 1.0 },
+                "band": { "type": "string", "enum": ["high", "medium", "low", "degraded"] }
+              }
+            }
+          }
+        }
+      }
+    },
+    "penalty_log": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["factor_key", "penalty", "reason", "applied_at"],
+        "additionalProperties": false,
+        "properties": {
+          "factor_key": {
+            "type": "string",
+            "minLength": 1
+          },
+          "penalty": {
+            "type": "number",
+            "minimum": 0.0,
+            "maximum": 1.0
+          },
+          "reason": {
+            "type": "string",
+            "minLength": 1
+          },
+          "applied_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      }
+    }
+  }
+}

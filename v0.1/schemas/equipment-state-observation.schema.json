@@ -1,0 +1,74 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://lumenaut-llc.github.io/oesis-program-specs/schemas/equipment-state-observation.schema.json",
+  "title": "OESIS Equipment State Observation",
+  "type": "object",
+  "required": [
+    "parcel_id",
+    "captured_at",
+    "confidence_band",
+    "source",
+    "signals"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "parcel_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "captured_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "confidence_band": {
+      "type": "string",
+      "enum": ["high", "medium", "low", "none"]
+    },
+    "source": {
+      "type": "object",
+      "required": ["source_kind", "source_name", "method", "ttl_seconds"],
+      "additionalProperties": false,
+      "properties": {
+        "source_kind": {
+          "type": "string",
+          "enum": [
+            "direct_measurement",
+            "adapter_derived",
+            "inferred",
+            "manual_entry"
+          ]
+        },
+        "source_name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "method": {
+          "type": "string",
+          "minLength": 1
+        },
+        "ttl_seconds": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "raw_ref": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "signals": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "hvac_mode": { "type": "string", "minLength": 1 },
+        "fan_state": { "type": "string", "minLength": 1 },
+        "air_source_mode": { "type": "string", "minLength": 1 },
+        "purifier_state": { "type": "string", "minLength": 1 },
+        "sump_state": { "type": "string", "minLength": 1 },
+        "outdoor_air_intake": { "type": "boolean" },
+        "equipment_running": { "type": "boolean" },
+        "setpoint_f": { "type": "number" }
+      }
+    }
+  }
+}

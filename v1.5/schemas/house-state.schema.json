@@ -1,0 +1,88 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://lumenaut-llc.github.io/oesis-program-specs/contracts/v1.5/schemas/house-state.schema.json",
+  "title": "OESIS House State",
+  "type": "object",
+  "required": [
+    "parcel_id",
+    "captured_at",
+    "indoor_response",
+    "power_state"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "parcel_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "captured_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "indoor_response": {
+      "type": "object",
+      "required": [
+        "pm25_ugm3",
+        "temperature_c",
+        "relative_humidity_pct"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "pm25_ugm3": { "type": "number", "minimum": 0 },
+        "temperature_c": { "type": "number" },
+        "relative_humidity_pct": { "type": "number", "minimum": 0, "maximum": 100 },
+        "infiltration": {
+          "type": "object",
+          "properties": {
+            "io_ratio": { "type": "number", "minimum": 0, "description": "Current indoor/outdoor PM2.5 ratio" },
+            "baseline_io_ratio": { "type": "number", "minimum": 0, "description": "30-day rolling median under non-event conditions" },
+            "baseline_io_p25": { "type": "number", "minimum": 0 },
+            "baseline_io_p75": { "type": "number", "minimum": 0 },
+            "envelope_class": { "type": "string", "enum": ["tight", "average", "leaky", "unknown"] },
+            "baseline_sample_count": { "type": "integer", "minimum": 0 },
+            "baseline_last_updated": { "type": "string", "format": "date-time" }
+          }
+        },
+        "thermal_dynamics": {
+          "type": "object",
+          "properties": {
+            "indoor_rise_rate_f_per_hour": { "type": "number", "description": "Rolling 2-hour linear slope of indoor temperature in F/hour" },
+            "rise_rate_r2": { "type": "number", "minimum": 0, "maximum": 1, "description": "Regression fit quality" },
+            "time_to_threshold_hours": { "type": ["number", "null"], "minimum": 0, "description": "Projected hours until indoor temp crosses danger threshold; null if not warming" },
+            "threshold_f": { "type": "number", "description": "Temperature threshold used for projection" },
+            "confidence_interval_low_hours": { "type": ["number", "null"], "minimum": 0 },
+            "confidence_interval_high_hours": { "type": ["number", "null"], "minimum": 0 },
+            "recommendation": { "type": "string", "enum": ["no_action_needed", "low_urgency", "monitor_closely", "pre_cool_recommended", "act_now", "immediate_action"] }
+          }
+        }
+      }
+    },
+    "power_state": {
+      "type": "object",
+      "required": [
+        "mains_state",
+        "backup_power_present",
+        "backup_power_active"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "mains_state": { "type": "string", "enum": ["up", "down", "unknown"] },
+        "backup_power_present": { "type": "boolean" },
+        "backup_power_active": { "type": "boolean" },
+        "battery_soc_pct": { "type": "number", "minimum": 0, "maximum": 100 },
+        "generator_state": { "type": "string", "minLength": 1 }
+      }
+    },
+    "source_summary": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "node_ids": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "source_kind": { "type": "string", "minLength": 1 }
+      }
+    }
+  }
+}

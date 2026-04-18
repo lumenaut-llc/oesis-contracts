@@ -1,0 +1,113 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://lumenaut-llc.github.io/oesis-program-specs/contracts/v1.0/schemas/source-provenance-record.schema.json",
+  "title": "OESIS Source Provenance Record v1.0",
+  "type": "object",
+  "required": [
+    "parcel_id",
+    "captured_at",
+    "records"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "parcel_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "captured_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "records": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "signal_key",
+          "value_type",
+          "confidence_band",
+          "source_kind",
+          "source_name",
+          "method",
+          "observed_at",
+          "ttl_seconds",
+          "stale"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "signal_key": {
+            "type": "string",
+            "minLength": 1
+          },
+          "value_type": {
+            "type": "string",
+            "enum": ["string", "number", "boolean", "null"]
+          },
+          "string_value": { "type": "string" },
+          "number_value": { "type": "number" },
+          "boolean_value": { "type": "boolean" },
+          "null_value": { "type": "boolean", "const": true },
+          "confidence_band": {
+            "type": "string",
+            "enum": ["high", "medium", "low", "none"]
+          },
+          "source_kind": {
+            "type": "string",
+            "enum": [
+              "direct_measurement",
+              "adapter_derived",
+              "inferred",
+              "manual_entry"
+            ]
+          },
+          "source_name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "method": {
+            "type": "string",
+            "minLength": 1
+          },
+          "observed_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "ttl_seconds": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "stale": {
+            "type": "boolean"
+          },
+          "used_inference_stage": {
+            "type": "string",
+            "enum": ["baseline", "bridge", "adaptation", "unknown"]
+          },
+          "raw_ref": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "allOf": [
+          {
+            "if": { "properties": { "value_type": { "const": "string" } } },
+            "then": { "required": ["string_value"] }
+          },
+          {
+            "if": { "properties": { "value_type": { "const": "number" } } },
+            "then": { "required": ["number_value"] }
+          },
+          {
+            "if": { "properties": { "value_type": { "const": "boolean" } } },
+            "then": { "required": ["boolean_value"] }
+          },
+          {
+            "if": { "properties": { "value_type": { "const": "null" } } },
+            "then": { "required": ["null_value"] }
+          }
+        ]
+      }
+    }
+  }
+}
