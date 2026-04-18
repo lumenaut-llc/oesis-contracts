@@ -43,14 +43,14 @@
     "sharing-settings": "schemas/sharing-settings.schema.json",
     "sharing-store": "schemas/sharing-store.schema.json"
   },
-  "source_commit": "81791c9af8876324c3098cd0e37edff1f62fb577",
-  "source_repo": "oesis-program-specs",
+  "source_commit": "60259c06bd994231dd0f9a615de89f051457b5cf",
+  "source_repo": "oesis-contracts",
   "source_roots": {
     "examples": [
-      "contracts/examples"
+      "examples"
     ],
     "schemas": [
-      "contracts/schemas"
+      "schemas"
     ]
   }
 }
