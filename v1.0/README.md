@@ -70,6 +70,38 @@ baseline reference until a real `v1.0` delta is added.
 House-state, intervention-event, and verification-outcome bridge contracts
 belong primarily in `../v1.5/`.
 
+## Planned additions (observation-schema admissibility facts — G17)
+
+Per
+[`architecture/system/calibration-program.md`](https://github.com/lumenaut-llc/oesis-program-specs/blob/main/architecture/system/calibration-program.md)
+§C, the canonical observation schema is extended with facts required to compute
+admissibility decisions. These are planned `v1.0` deltas, not yet landed:
+
+- `burn_in_complete: bool` — whether the producing device has cleared its
+  §B burn-in window
+- `node_calibration_session_ref: string` — opaque pointer to the most recent
+  calibration session record
+- `node_deployment_maturity: enum` — one of `v0.1` / `v1.0` / `v1.5` / `v2.0`
+  per [`deployment-maturity-ladder.md`](https://github.com/lumenaut-llc/oesis-program-specs/blob/main/architecture/system/deployment-maturity-ladder.md)
+- `node_deployment_class: enum` — one of `indoor` / `sheltered` / `outdoor`
+  per [`sensor-placement-and-representativeness-guide.md`](https://github.com/lumenaut-llc/oesis-program-specs/blob/main/architecture/system/sensor-placement-and-representativeness-guide.md)
+- `protective_fixture_verified_at: timestamp | null` — last verified
+  thermal-loading (or equivalent) test for protective fixtures
+- `placement_representativeness_class: enum | null` — A / B / C / D per the
+  placement guide
+
+Adapter-derived equivalents (`adapter_source_ref`, `adapter_contract_version`,
+`adapter_onboarding_ref`, `adapter_credential_last_verified_at`,
+`adapter_tier`) are planned primarily in `../v1.5/` where adapter surfaces
+land, per
+[`adapter-trust-program.md`](https://github.com/lumenaut-llc/oesis-program-specs/blob/main/architecture/system/adapter-trust-program.md)
+§C.
+
+The admissibility **decision** fields (`admissible_to_calibration_dataset`,
+`admissibility_reasons`) do **not** live in this schema — they are computed
+in runtime and attached to the normalized observation only (decision
+2026-04-19: schema carries facts, runtime computes decision).
+
 ## Version boundary (governance)
 
 - `v0.1`: governance objects may exist as baseline/docs-compatible assets, but
