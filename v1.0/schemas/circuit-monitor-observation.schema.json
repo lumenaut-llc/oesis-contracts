@@ -1,0 +1,163 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://lumenaut-llc.github.io/oesis-contracts/v1.0/schemas/circuit-monitor-observation.schema.json",
+  "title": "OESIS Circuit Monitor Observation (v1.0)",
+  "description": "Raw packet contract for circuit-monitor hardware. See v1.0/circuit-monitor-observation-schema.md for field-level documentation and inference integration.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "node_id",
+    "firmware_version",
+    "uptime_s",
+    "observed_at",
+    "circuits",
+    "health"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "oesis.circuit-monitor.v1"
+    },
+    "node_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "firmware_version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "uptime_s": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "observed_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "circuits": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/circuitReading"
+      }
+    },
+    "health": {
+      "$ref": "#/$defs/healthObject"
+    }
+  },
+  "$defs": {
+    "circuitReading": {
+      "type": "object",
+      "required": [
+        "circuit_id",
+        "current_a",
+        "power_w",
+        "voltage_v",
+        "power_factor",
+        "energy_kwh",
+        "inferred_state",
+        "cycle_active",
+        "cycle_duration_s"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "circuit_id": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Operator-assigned circuit name"
+        },
+        "current_a": {
+          "type": "number",
+          "minimum": 0,
+          "description": "RMS current in amperes"
+        },
+        "power_w": {
+          "type": "number",
+          "description": "Active power in watts"
+        },
+        "voltage_v": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Line voltage in volts"
+        },
+        "power_factor": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Power factor, 0.0 to 1.0"
+        },
+        "energy_kwh": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Cumulative energy since counter reset"
+        },
+        "inferred_state": {
+          "type": "string",
+          "description": "Firmware-classified circuit state. Union of HVAC and sump enumerations per v1.0/circuit-monitor-observation-schema.md.",
+          "enum": [
+            "off",
+            "fan_only",
+            "compressor_running",
+            "heating_active",
+            "overload",
+            "unknown",
+            "standby",
+            "starting",
+            "running"
+          ]
+        },
+        "cycle_active": {
+          "type": "boolean",
+          "description": "Whether equipment is in an active cycle"
+        },
+        "cycle_duration_s": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Seconds since cycle start; null when cycle_active is false"
+        }
+      }
+    },
+    "healthObject": {
+      "type": "object",
+      "required": [
+        "wifi_rssi",
+        "heap_free",
+        "sample_interval_ms",
+        "read_failures_total",
+        "last_error"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "wifi_rssi": {
+          "type": "integer",
+          "description": "Wi-Fi RSSI in dBm; typically negative"
+        },
+        "heap_free": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Free heap bytes"
+        },
+        "sample_interval_ms": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Firmware sample interval in milliseconds"
+        },
+        "read_failures_total": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Cumulative sensor read failures since last reset"
+        },
+        "last_error": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Last error string, or null"
+        }
+      }
+    }
+  }
+}

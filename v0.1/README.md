@@ -152,11 +152,14 @@ into house-state, action, and measured outcome reasoning.
 
 ## Deployment-maturity companion schemas
 
-Draft deployment-maturity companion docs live under `artifacts/contracts-bundle/`:
+Draft deployment-maturity companion docs live in this repo's bundles directory:
 
-- `../../artifacts/contracts-bundle/node-health-schema.md`
-- `../../artifacts/contracts-bundle/deployment-metadata-schema.md`
-- `../../artifacts/contracts-bundle/device-event-schema.md`
+- [`../bundles/contracts-bundle/deployment-metadata-schema.md`](../bundles/contracts-bundle/deployment-metadata-schema.md)
+
+Notes:
+
+- `node-health-schema.md` and `device-event-schema.md` were earlier draft companion docs without machine-readable schemas; they have been removed pending real schema design (see `v1.0/` for the current `deployment-metadata` schema delta).
+- The `bundles/contracts-bundle/` directory is a published snapshot for downstream consumers; it is not a separate canonical lane. See [`../bundles/contracts-bundle/README.md`](../bundles/contracts-bundle/README.md).
 
 ## Related workstreams
 

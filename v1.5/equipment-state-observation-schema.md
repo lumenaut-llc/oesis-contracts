@@ -55,9 +55,27 @@ passive inference method.
 - Preserve source kind and freshness metadata for every snapshot.
 - Keep this object private by default unless explicit sharing policy applies.
 
+## Lane relationship to v1.0
+
+The v1.0 lane has its own `equipment-state-observation` variant that adds a `fusion_hint` field for adapter/read-side posture — see [`../v1.0/equipment-state-observation-schema.md`](../v1.0/equipment-state-observation-schema.md).
+
+The v1.0 and v1.5 variants **evolve independently along parallel axes**:
+
+- v1.0 extends the v0.1 baseline with `fusion_hint` (adapter fusion posture)
+- v1.5 extends the v0.1 baseline with `bridge_role` (this doc, house-state bridge role)
+
+Neither lane inherits from the other. This is intentional per the lane contract in [`../v0.1/README.md`](../v0.1/README.md):
+
+> Use `v1.0/` when you need broader target-lane notes, schema deltas, or example deltas that must remain separate from the frozen default contract set.
+> Use `v1.5/` when the delta is specific to the bridge from hazard description into house-state, action, and measured outcome reasoning.
+
+A consumer choosing which schema to validate against should pick the lane that matches their use case (adapter integration → v1.0; house-state bridge → v1.5). The v0.1 baseline remains a valid superset that both lanes extend.
+
 ## Related
 
 - `house-state-schema.md`
 - `intervention-event-schema.md`
 - `verification-outcome-schema.md`
+- [`../v1.0/equipment-state-observation-schema.md`](../v1.0/equipment-state-observation-schema.md) — v1.0 lane variant with `fusion_hint`
+- [`../v0.1/equipment-state-observation-schema.md`](../v0.1/equipment-state-observation-schema.md) — baseline (5 fields)
 - [`v1.5/equipment-state-adapter.md`](https://github.com/lumenaut-llc/oesis-hardware/blob/main/v1.5/equipment-state-adapter.md)

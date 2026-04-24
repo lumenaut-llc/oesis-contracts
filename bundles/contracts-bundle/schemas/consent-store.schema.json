@@ -1,0 +1,142 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://lumenaut-llc.github.io/oesis-program-specs/schemas/consent-store.schema.json",
+  "title": "OESIS Consent Store",
+  "type": "object",
+  "required": [
+    "updated_at",
+    "consents"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "updated_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "consents": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "consent_id",
+          "parcel_id",
+          "parcel_ref",
+          "granted_at",
+          "revoked_at",
+          "revocation_reason",
+          "sharing_scope",
+          "data_classes",
+          "custody_tier",
+          "recipient_type",
+          "recipient_id",
+          "temporal_resolution",
+          "spatial_precision",
+          "consent_version",
+          "ui_surface",
+          "user_agent",
+          "ip_hash"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "consent_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "parcel_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "parcel_ref": {
+            "type": "string",
+            "minLength": 1
+          },
+          "granted_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "revoked_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "revocation_reason": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "sharing_scope": {
+            "type": "string",
+            "minLength": 1
+          },
+          "data_classes": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "custody_tier": {
+            "type": "string",
+            "enum": [
+              "shared",
+              "public"
+            ]
+          },
+          "recipient_type": {
+            "type": "string",
+            "minLength": 1
+          },
+          "recipient_id": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "temporal_resolution": {
+            "type": "string",
+            "enum": [
+              "raw",
+              "5min",
+              "hourly",
+              "daily_summary"
+            ]
+          },
+          "spatial_precision": {
+            "type": "string",
+            "enum": [
+              "parcel",
+              "block",
+              "neighborhood"
+            ]
+          },
+          "consent_version": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "ui_surface": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "user_agent": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "ip_hash": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        }
+      }
+    }
+  }
+}

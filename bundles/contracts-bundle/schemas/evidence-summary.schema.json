@@ -1,0 +1,177 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://lumenaut-llc.github.io/oesis-program-specs/contracts/v0.1/schemas/evidence-summary.schema.json",
+  "title": "OESIS Evidence Summary",
+  "type": "object",
+  "required": [
+    "parcel_id",
+    "computed_at",
+    "evidence_mode",
+    "inference_basis",
+    "confidence",
+    "headline",
+    "confidence_band",
+    "top_drivers",
+    "top_limitations",
+    "source_breakdown",
+    "freshness"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "parcel_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "computed_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "evidence_mode": {
+      "type": "string",
+      "enum": [
+        "local_only",
+        "local_plus_public",
+        "public_only",
+        "insufficient"
+      ]
+    },
+    "inference_basis": {
+      "type": "string",
+      "enum": [
+        "local_only",
+        "local_plus_shared",
+        "local_plus_public",
+        "local_plus_shared_plus_public",
+        "public_only",
+        "shared_only",
+        "shared_plus_public",
+        "insufficient"
+      ]
+    },
+    "confidence": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "headline": {
+      "type": "string"
+    },
+    "confidence_band": {
+      "type": "string",
+      "enum": [
+        "low",
+        "moderate",
+        "high"
+      ]
+    },
+    "top_drivers": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "top_limitations": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "source_breakdown": {
+      "type": "object",
+      "required": [
+        "local",
+        "shared",
+        "public",
+        "parcel_context",
+        "system"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "local": { "type": "boolean" },
+        "shared": { "type": "boolean" },
+        "public": { "type": "boolean" },
+        "parcel_context": { "type": "boolean" },
+        "system": { "type": "boolean" }
+      }
+    },
+    "grouped_contributions": {
+      "type": "object",
+      "properties": {
+        "local": { "$ref": "#/$defs/contributionList" },
+        "shared": { "$ref": "#/$defs/contributionList" },
+        "public": { "$ref": "#/$defs/contributionList" },
+        "parcel_context": { "$ref": "#/$defs/contributionList" },
+        "system": { "$ref": "#/$defs/contributionList" }
+      }
+    },
+    "source_modes": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "freshness": {
+      "$ref": "#/$defs/freshness"
+    }
+  },
+  "$defs": {
+    "contributionList": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "contribution_id",
+          "source_class",
+          "source_name",
+          "role",
+          "summary",
+          "hazards",
+          "weight",
+          "visibility"
+        ],
+        "properties": {
+          "contribution_id": { "type": "string" },
+          "source_class": { "type": "string" },
+          "source_name": { "type": "string" },
+          "role": {
+            "type": "string",
+            "enum": ["driver", "limitation"]
+          },
+          "summary": { "type": "string" },
+          "hazards": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "weight": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "visibility": { "type": "string" }
+        }
+      }
+    },
+    "freshness": {
+      "type": "object",
+      "required": [
+        "latest_observation_at",
+        "seconds_since_latest",
+        "stale"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "latest_observation_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "seconds_since_latest": {
+          "type": "number",
+          "minimum": 0
+        },
+        "stale": {
+          "type": "boolean"
+        }
+      }
+    }
+  }
+}
