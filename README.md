@@ -8,8 +8,8 @@ Canonical schemas, examples, and contract prose for the [Open Environmental Sens
 |------|----------|
 | [`v0.1/`](v0.1/) | Baseline lane: bench-air node observations, consent, sharing, rights requests, operator access |
 | [`v0.2/`](v0.2/) — [`v0.5/`](v0.5/) | Overlay lanes (inherit v0.1 baseline; runtime adds test-fixture overlays) |
-| [`v1.0/`](v1.0/) | Fielded lane: trust scoring, multi-node composition, deployment metadata |
-| [`v1.5/`](v1.5/) | Bridge lane: house-state, equipment-state, intervention events, verification outcomes |
+| [`v1.0/`](v1.0/) | Fielded lane: trust scoring, multi-node composition, deployment metadata. Planned: observation-schema admissibility facts per [`calibration-program.md`](https://github.com/lumenaut-llc/oesis-program-specs/blob/main/architecture/system/calibration-program.md) §C — tracked as gap G17 |
+| [`v1.5/`](v1.5/) | Bridge lane: house-state, equipment-state, intervention events, verification outcomes. Adapter-derived observation facts per [`adapter-trust-program.md`](https://github.com/lumenaut-llc/oesis-program-specs/blob/main/architecture/system/adapter-trust-program.md) §C land here — tracked as gap G18 |
 | [`bundles/contracts-bundle/`](bundles/contracts-bundle/) | Published snapshot for downstream consumers |
 | [`LANE-INDEX.md`](LANE-INDEX.md) | Detailed lane-by-lane navigation |
 

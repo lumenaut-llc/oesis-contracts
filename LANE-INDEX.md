@@ -11,8 +11,8 @@ Use this directory to navigate contract lanes by release posture.
 | `v0.3` | Promotion marker: flood-capable runtime | Inherits `v0.1` (no overrides) | `v0.3/README.md` |
 | `v0.4` | Promotion marker: multi-node + evidence composition | Inherits `v0.1` (no overrides) | `v0.4/README.md` |
 | `v0.5` | Promotion marker: governance enforcement | Inherits `v0.1` (no overrides) | `v0.5/README.md` |
-| `v1.0` | Additive lane for broader contract deltas | Active additive lane | `v1.0/README.md` |
-| `v1.5` | Additive bridge lane for response/verification objects | Active additive lane | `v1.5/README.md` |
+| `v1.0` | Additive lane for broader contract deltas; planned observation-schema admissibility facts (G17) | Active additive lane | `v1.0/README.md` |
+| `v1.5` | Additive bridge lane for response/verification objects; adapter-derived observation facts planned here (G18) | Active additive lane | `v1.5/README.md` |
 
 ## Baseline lane
 
