@@ -52,6 +52,15 @@ are not part of the frozen `v0.1` acceptance surface:
 Treat these as later-lane material (`v1.5` bridge support, and `v2.5` for full
 controls-compatibility inventory), even when copies exist here.
 
+## Variant pattern
+
+Some schemas have multiple example payloads for different scenarios. The convention is `<schema>-<variant>.example.json`:
+
+- `intervention-event.example.json` (baseline) + `intervention-event-flood.example.json` + `intervention-event-heat.example.json`
+- `verification-outcome.example.json` (baseline) + `verification-outcome-flood.example.json` + `verification-outcome-heat.example.json`
+
+The `validate_examples.py` script matches each `<name>.example.json` against an exact `<name>.schema.json`. Variant examples (e.g., `intervention-event-flood.example.json`) have no exact-name schema, so the validator silently skips them — only the baseline form (`intervention-event.example.json`) is schema-validated. The variants serve as illustrative payloads for documentation; treat the baseline example as the validation contract.
+
 ## Lane rule
 
 Keep examples aligned with prose contracts and matching JSON Schemas in
