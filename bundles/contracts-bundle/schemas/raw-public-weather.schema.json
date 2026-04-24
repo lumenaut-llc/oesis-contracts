@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://lumenaut-llc.github.io/oesis-program-specs/contracts/v0.1/schemas/raw-public-weather.schema.json",
+  "title": "OESIS Raw Public Weather Context",
+  "type": "object",
+  "required": [
+    "source_name",
+    "observed_at",
+    "parcel_id",
+    "regional_temperature_c",
+    "regional_relative_humidity_pct"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "source_name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "observed_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "parcel_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "regional_temperature_c": {
+      "type": "number"
+    },
+    "regional_relative_humidity_pct": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 100
+    },
+    "advisories": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  }
+}

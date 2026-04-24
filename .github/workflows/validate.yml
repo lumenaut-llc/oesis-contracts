@@ -44,7 +44,7 @@ jobs:
         run: |
           set -euo pipefail
           missing=0
-          for lane_dir in v0.1 v1.0 v1.5; do
+          for lane_dir in v0.1 v1.0 v1.5 bundles/contracts-bundle; do
             if [ ! -d "$lane_dir/schemas" ]; then continue; fi
             for schema in "$lane_dir"/schemas/*.schema.json; do
               [ -e "$schema" ] || continue

@@ -1,0 +1,73 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://lumenaut-llc.github.io/oesis-program-specs/contracts/v0.1/schemas/public-context.schema.json",
+  "title": "OESIS Public Context",
+  "type": "object",
+  "required": [
+    "context_id",
+    "source_kind",
+    "source_name",
+    "observed_at",
+    "coverage_mode",
+    "parcel_id",
+    "hazards",
+    "summary"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "context_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "source_kind": {
+      "type": "string",
+      "const": "public_context"
+    },
+    "source_name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "observed_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "coverage_mode": {
+      "type": "string",
+      "enum": [
+        "regional",
+        "subregional",
+        "parcel_adjacent"
+      ]
+    },
+    "parcel_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "hazards": {
+      "type": "object",
+      "properties": {
+        "smoke_probability": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "heat_probability": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "flood_probability": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        }
+      }
+    },
+    "summary": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  }
+}

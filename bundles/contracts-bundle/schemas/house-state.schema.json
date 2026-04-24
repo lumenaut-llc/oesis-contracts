@@ -1,0 +1,64 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://lumenaut-llc.github.io/oesis-program-specs/schemas/house-state.schema.json",
+  "title": "OESIS House State",
+  "type": "object",
+  "required": [
+    "parcel_id",
+    "captured_at",
+    "indoor_response",
+    "power_state"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "parcel_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "captured_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "indoor_response": {
+      "type": "object",
+      "required": [
+        "pm25_ugm3",
+        "temperature_c",
+        "relative_humidity_pct"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "pm25_ugm3": { "type": "number", "minimum": 0 },
+        "temperature_c": { "type": "number" },
+        "relative_humidity_pct": { "type": "number", "minimum": 0, "maximum": 100 }
+      }
+    },
+    "power_state": {
+      "type": "object",
+      "required": [
+        "mains_state",
+        "backup_power_present",
+        "backup_power_active"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "mains_state": { "type": "string", "enum": ["up", "down", "unknown"] },
+        "backup_power_present": { "type": "boolean" },
+        "backup_power_active": { "type": "boolean" },
+        "battery_soc_pct": { "type": "number", "minimum": 0, "maximum": 100 },
+        "generator_state": { "type": "string", "minLength": 1 }
+      }
+    },
+    "source_summary": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "node_ids": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "source_kind": { "type": "string", "minLength": 1 }
+      }
+    }
+  }
+}

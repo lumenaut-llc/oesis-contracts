@@ -20,7 +20,11 @@ from referencing import Registry, Resource
 from referencing.jsonschema import DRAFT202012
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
-LANES = ["v0.1", "v1.0", "v1.5"]
+# Each lane is either a version dir (v0.1, v1.0, v1.5) OR the published bundle.
+# The bundle is a v0.1 snapshot for downstream consumers; adding it here
+# catches future drift between bundle content and its manifest without
+# requiring a separate generator.
+LANES = ["v0.1", "v1.0", "v1.5", "bundles/contracts-bundle"]
 
 
 def build_registry(schemas_dir: Path) -> Registry:
