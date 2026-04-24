@@ -27,9 +27,12 @@ Contracts follow the same lane model as the runtime. Canonical examples live her
 
 | Repository | How it consumes contracts |
 |------------|---------------------------|
-| [oesis-runtime](https://github.com/lumenaut-llc/oesis-runtime) | Mirrors schemas + examples under `oesis/assets/v*/`; parity enforced by `cross_repo_sync_check.py` in oesis-program-specs |
+| [oesis-runtime](https://github.com/lumenaut-llc/oesis-runtime) | Mirrors examples under `oesis/assets/v*/examples/`; hand-codes validators per lane; parity enforced by `cross_repo_sync_check.py` in oesis-program-specs |
 | [oesis-public-site](https://github.com/lumenaut-llc/oesis-public-site) | Consumes public-safe content via the `public-content-bundle` published by oesis-program-specs |
 | [oesis-program-specs](https://github.com/lumenaut-llc/oesis-program-specs) | References contracts from architecture, release, and governance docs via absolute GitHub URLs |
+| External downstream | Pulls [`bundles/contracts-bundle/`](bundles/contracts-bundle/) as a pinned snapshot with its own manifest |
+
+See [`CONSUMING.md`](CONSUMING.md) for the full consumer guide — lane selection, validation patterns, sync discipline, and the step-by-step dev loop for adding a new contract.
 
 ## Validation
 
