@@ -16,15 +16,19 @@ Provide the additive `v1.0` contract lane without mutating the frozen
 
 ## Current deltas in this lane
 
-- `parcel-context-schema.md` frames stronger parcel-intelligence context while
-  keeping bridge-stage house-state and intervention semantics in the `v1.5`
-  lane
-- `control-compatibility-schema.md` keeps bounded-controls compatibility inventory
-  posture visible in an additive lane while remaining staged primarily for `v2.5`
-- `schemas/equipment-state-observation.schema.json` adds a `v1.0` lane variant
-  for adapter/read-side operating posture snapshots
-- `schemas/source-provenance-record.schema.json` adds a `v1.0` lane variant for
-  per-signal confidence and freshness metadata
+- `parcel-context-v1.0-direction.md` frames stronger parcel-intelligence
+  context while keeping bridge-stage house-state and intervention semantics
+  in the `v1.5` lane (this is a **direction** doc, not a schema replacement —
+  the parcel-context schema JSON lives only in `../v0.1/schemas/`)
+- `control-compatibility-v2.5-staged.md` keeps bounded-controls compatibility
+  inventory posture visible in an additive lane while remaining staged
+  primarily for `v2.5` (filename declares the future-stage placement)
+- `equipment-state-observation-schema.md` + `schemas/equipment-state-observation.schema.json`
+  add a `v1.0` lane variant for adapter/read-side operating posture snapshots
+  (adds `fusion_hint`; see doc for cross-reference to the parallel `v1.5`
+  variant with `bridge_role`)
+- `source-provenance-record-schema.md` + `schemas/source-provenance-record.schema.json`
+  add a `v1.0` lane variant for per-signal confidence and freshness metadata
 - `governance-operational-model.md` sets `v1.0` as the first lane where
   governance execution is treated as a runtime contract surface rather than only
   policy framing
