@@ -75,7 +75,12 @@ Trade-off chosen by the project:
 - **Pro**: tailored error messages, domain-specific constraints beyond schema, no runtime jsonschema dependency
 - **Con**: validator drift risk — hand-coded validator must stay in sync with JSON Schema
 
-Drift risk is mitigated at CI time: `scripts/validate_examples.py` in this repo validates every example against its schema using `jsonschema`. If a hand-coded validator in runtime accepts something the schema rejects, the example eventually fails CI.
+Drift risk is mitigated at CI time on **two** axes:
+
+- **Schema-against-example** — `scripts/validate_examples.py` in this repo validates every example against its schema using `jsonschema`. If a hand-coded validator in runtime accepts something the schema rejects, the example fails CI.
+- **Pre-fanout runtime-compat** — `scripts/check_runtime_compat.py` clones `oesis-runtime` in CI and runs runtime's hand-coded validators against every contract example on the PR branch. This blocks the merge **before** `release-fanout.yml` opens broken sync PRs across all downstream repos. Run locally with `RUNTIME_PATH=../oesis-runtime python3 scripts/check_runtime_compat.py`.
+
+Together these catch drift in both directions: the schema-only check catches "runtime accepts payloads the schema would reject"; the runtime-compat check catches "schema accepts payloads runtime would reject."
 
 ### Adding a new runtime consumer
 

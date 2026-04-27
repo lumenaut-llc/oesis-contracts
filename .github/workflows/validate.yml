@@ -73,3 +73,38 @@ jobs:
         # referencing.Registry per lane so those cross-schema refs resolve.
         shell: bash
         run: python3 scripts/validate_examples.py
+
+  runtime-compat:
+    # Pre-fanout breaking-change check: validate that oesis-runtime's
+    # hand-coded validators still accept every contract example on this PR.
+    # If a schema change tightens a constraint runtime can't honor, this
+    # blocks the merge BEFORE release-fanout opens broken sync PRs across
+    # downstream repos.
+    #
+    # Failure here means: this PR would break runtime sync. Fix one of:
+    #   (a) update the runtime validator in a follow-up runtime PR first
+    #   (b) revisit the contract change to be backward-compatible
+    #   (c) document an explicit migration path before merging
+    #
+    # See CONSUMING.md "Pattern 1 — Runtime" for the validator-drift contract.
+    name: Runtime validators accept contract examples
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout contracts (PR branch)
+        uses: actions/checkout@v4
+        with:
+          path: contracts
+      - name: Checkout runtime (main)
+        uses: actions/checkout@v4
+        with:
+          repository: lumenaut-llc/oesis_runtime
+          ref: main
+          path: runtime
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Run pre-fanout compat check
+        working-directory: contracts
+        env:
+          RUNTIME_PATH: ${{ github.workspace }}/runtime
+        run: python3 scripts/check_runtime_compat.py
