@@ -45,10 +45,36 @@ Before submitting, run at minimum:
 # Syntax check all JSON files
 find . -name "*.json" -exec python3 -m json.tool {} \; >/dev/null
 
+# Schema-against-example validation (this repo)
+python3 scripts/validate_examples.py
+
+# Pre-fanout breaking-change check — confirms runtime's hand-coded
+# validators still accept every contract example. This is the same gate
+# that runs in CI; running it locally avoids waiting on CI to learn
+# you've broken the runtime sync contract.
+RUNTIME_PATH=../oesis-runtime python3 scripts/check_runtime_compat.py
+
 # Full cross-repo consistency check (from oesis-program-specs)
 cd ../oesis-program-specs
 make cross-repo-sync
 ```
+
+### What the runtime-compat check catches
+
+The `check_runtime_compat.py` script imports `oesis-runtime`'s hand-coded
+validators (e.g. `validate_node_observation`, `validate_trust_score`) and runs
+them against every contract example on the PR branch. If a schema change tightens
+a constraint the runtime validator can't yet honor, this fails — **before**
+`release-fanout.yml` opens broken sync PRs in oesis-runtime, oesis-public-site,
+oesis-hardware, and oesis-program-specs.
+
+When this check fails, fix one of:
+
+- (a) Land the matching runtime validator update in a runtime PR first
+- (b) Revisit the contract change to be backward-compatible
+- (c) Document a migration path in `<lane>/schema-migration-*.md` before merging
+
+See [CONSUMING.md](CONSUMING.md) Pattern 1 for the validator-drift contract.
 
 ## Commit style
 
