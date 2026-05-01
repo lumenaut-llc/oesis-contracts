@@ -1,0 +1,216 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://lumenaut-llc.github.io/oesis-program-specs/contracts/v1.0/schemas/node-observation.schema.json",
+  "title": "OESIS Node Observation v1.0 (admissibility facts)",
+  "description": "v1.0 lane variant of node-observation that extends the v0.1 baseline with the six admissibility-fact fields required by calibration-program §C. Per ADR 0009 (schema carries facts, runtime computes decision), these are factual fields only — the admissibility decision is computed in runtime and attached to normalized observations, never to the canonical observation.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "node_id",
+    "observed_at",
+    "firmware_version",
+    "location_mode",
+    "sensors",
+    "health"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "oesis.bench-air.v1"
+    },
+    "node_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "observed_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "firmware_version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "location_mode": {
+      "type": "string",
+      "enum": [
+        "indoor",
+        "sheltered",
+        "outdoor"
+      ]
+    },
+    "sensors": {
+      "type": "object",
+      "required": [
+        "sht45",
+        "bme680"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "sht45": {
+          "$ref": "#/$defs/sht45Reading"
+        },
+        "bme680": {
+          "$ref": "#/$defs/bme680Reading"
+        }
+      }
+    },
+    "derived": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "temperature_c_primary": {
+          "type": "number"
+        },
+        "relative_humidity_pct_primary": {
+          "type": "number"
+        },
+        "pressure_hpa": {
+          "type": "number"
+        },
+        "voc_trend_source": {
+          "type": "string"
+        }
+      }
+    },
+    "sequence": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "transport": {
+      "type": "object"
+    },
+    "notes": {
+      "type": "string"
+    },
+    "install_role": {
+      "type": "string",
+      "minLength": 1
+    },
+    "privacy_mode": {
+      "type": "string",
+      "enum": [
+        "normal",
+        "derived_only",
+        "bounded_internal"
+      ]
+    },
+    "burn_in_complete": {
+      "type": "boolean",
+      "description": "Whether the producing device has cleared the §B burn-in window per calibration-program.md. Optional in v1.0 to remain forward-compatible with v0.1 producers; runtime treats absent as false."
+    },
+    "node_calibration_session_ref": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Opaque pointer to the most recent calibration session record for this node. Format is implementation-defined (URN, URL, or repo-relative path). Optional; runtime treats absent as 'no calibration on file'."
+    },
+    "node_deployment_maturity": {
+      "type": "string",
+      "enum": ["v0.1", "v1.0", "v1.5", "v2.0"],
+      "description": "Deployment maturity per deployment-maturity-ladder.md. Optional in v1.0; runtime treats absent as v0.1 (lowest)."
+    },
+    "node_deployment_class": {
+      "type": "string",
+      "enum": ["indoor", "sheltered", "outdoor"],
+      "description": "Deployment class per sensor-placement-and-representativeness-guide.md. Distinct from location_mode (which is a producer-side intent declaration); deployment_class is a verified install attribute. Optional in v1.0."
+    },
+    "protective_fixture_verified_at": {
+      "type": ["string", "null"],
+      "format": "date-time",
+      "description": "Last verified thermal-loading (or equivalent) test for the protective fixture, or null if no fixture is required for this deployment_class. Optional in v1.0; runtime treats absent as null."
+    },
+    "placement_representativeness_class": {
+      "type": ["string", "null"],
+      "enum": ["A", "B", "C", "D", null],
+      "description": "Placement representativeness class A/B/C/D per sensor-placement-and-representativeness-guide.md, or null if not yet assessed. Optional in v1.0."
+    },
+    "health": {
+      "type": "object",
+      "required": [
+        "uptime_s",
+        "wifi_connected",
+        "free_heap_bytes",
+        "read_failures_total",
+        "last_error"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "uptime_s": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "wifi_connected": {
+          "type": "boolean"
+        },
+        "free_heap_bytes": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "read_failures_total": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "last_error": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    }
+  },
+  "$defs": {
+    "sht45Reading": {
+      "type": "object",
+      "required": [
+        "present",
+        "temperature_c",
+        "relative_humidity_pct"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "present": {
+          "type": "boolean"
+        },
+        "temperature_c": {
+          "type": "number"
+        },
+        "relative_humidity_pct": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100
+        }
+      }
+    },
+    "bme680Reading": {
+      "type": "object",
+      "required": [
+        "present",
+        "temperature_c",
+        "relative_humidity_pct",
+        "pressure_hpa",
+        "gas_resistance_ohm"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "present": {
+          "type": "boolean"
+        },
+        "temperature_c": {
+          "type": "number"
+        },
+        "relative_humidity_pct": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "pressure_hpa": {
+          "type": "number"
+        },
+        "gas_resistance_ohm": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        }
+      }
+    }
+  }
+}
