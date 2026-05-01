@@ -95,6 +95,31 @@
           "raw_ref": {
             "type": "string",
             "minLength": 1
+          },
+          "adapter_source_ref": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Pointer to the source authority file under adapter-trust-program §A (URN, URL, or repo-relative path). Required when source_kind == 'adapter_derived'."
+          },
+          "adapter_contract_version": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Version string the reading was produced against (e.g. an API version or contract revision). Required when source_kind == 'adapter_derived'."
+          },
+          "adapter_onboarding_ref": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Pointer to the parcel's initial verification record for this adapter. Required when source_kind == 'adapter_derived'."
+          },
+          "adapter_credential_last_verified_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Timestamp of the most recent credential / contract-version verification for this adapter source. Required when source_kind == 'adapter_derived'."
+          },
+          "adapter_tier": {
+            "type": "string",
+            "enum": ["tier_1_passive", "tier_2_adapter", "tier_3_direct"],
+            "description": "Adapter tier per node-taxonomy.md. Required when source_kind == 'adapter_derived'. Note: tier_3_direct on an adapter_derived record is unusual — it indicates a direct-measurement source routed through an adapter wrapper for uniform handling."
           }
         },
         "allOf": [
@@ -113,6 +138,18 @@
           {
             "if": { "properties": { "value_type": { "const": "null" } } },
             "then": { "required": ["null_value"] }
+          },
+          {
+            "if": { "properties": { "source_kind": { "const": "adapter_derived" } } },
+            "then": {
+              "required": [
+                "adapter_source_ref",
+                "adapter_contract_version",
+                "adapter_onboarding_ref",
+                "adapter_credential_last_verified_at",
+                "adapter_tier"
+              ]
+            }
           }
         ]
       }
