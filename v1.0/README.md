@@ -74,12 +74,13 @@ baseline reference until a real `v1.0` delta is added.
 House-state, intervention-event, and verification-outcome bridge contracts
 belong primarily in `../v1.5/`.
 
-## Planned additions (observation-schema admissibility facts — G17)
+## Observation-schema admissibility facts (G17 — implemented)
 
 Per
 [`architecture/system/calibration-program.md`](https://github.com/lumenaut-llc/oesis-program-specs/blob/main/architecture/system/calibration-program.md)
 §C, the canonical observation schema is extended with facts required to compute
-admissibility decisions. These are planned `v1.0` deltas, not yet landed:
+admissibility decisions. These six fields are now part of the v1.0 lane variant
+of `node-observation`:
 
 - `burn_in_complete: bool` — whether the producing device has cleared its
   §B burn-in window
@@ -94,17 +95,27 @@ admissibility decisions. These are planned `v1.0` deltas, not yet landed:
 - `placement_representativeness_class: enum | null` — A / B / C / D per the
   placement guide
 
+All six fields are **optional** to keep the change forward-compatible — every
+v0.1 observation payload still validates against the v1.0 schema. See
+[`node-observation-schema.md`](node-observation-schema.md) for full field
+semantics, the `location_mode` vs `node_deployment_class` distinction, and
+runtime fallback rules when a field is absent.
+
+Schema: [`schemas/node-observation.schema.json`](schemas/node-observation.schema.json)
+· Example: [`examples/node-observation.example.json`](examples/node-observation.example.json)
+
 Adapter-derived equivalents (`adapter_source_ref`, `adapter_contract_version`,
 `adapter_onboarding_ref`, `adapter_credential_last_verified_at`,
 `adapter_tier`) are planned primarily in `../v1.5/` where adapter surfaces
 land, per
 [`adapter-trust-program.md`](https://github.com/lumenaut-llc/oesis-program-specs/blob/main/architecture/system/adapter-trust-program.md)
-§C.
+§C — tracked as gap G18.
 
 The admissibility **decision** fields (`admissible_to_calibration_dataset`,
 `admissibility_reasons`) do **not** live in this schema — they are computed
-in runtime and attached to the normalized observation only (decision
-2026-04-19: schema carries facts, runtime computes decision).
+in runtime and attached to the normalized observation only (per
+[ADR 0009](https://github.com/lumenaut-llc/oesis-program-specs/blob/main/meta/adr/0009-admissibility-schema-split-facts-vs-decision.md):
+schema carries facts, runtime computes decision).
 
 ## Version boundary (governance)
 
